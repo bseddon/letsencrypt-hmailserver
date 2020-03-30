@@ -47,4 +47,17 @@ You will also need to edit [after-generate.ps1](ps/after-generate.ps1) to modify
 
 Next tell Certify the Web how to find the PowerShell script to run once a certificate has been generated.  The screenshot shows the steps to do this:
 
+![Set a Certify the Web script](http://lyquidity-downloads.s3.amazonaws.com/github-images/certifytheweb.png)
 
+1. Click the 'advanced options' check box
+2. Select the scripting option
+3. Select the PowerShell [after-generate.ps1](ps/after-generate.ps1)
+4. Test
+
+If there is a .pfx file in the 'pfx' folder then after testing there should be three additional files:
+
+1. cert.pem
+2. pkeypem
+3. output.txt
+
+The file output.txt will contain a review of the steps taken to process the .pfx file.  Any errors will be written to the error log device specified in the relevant php.imi file.
