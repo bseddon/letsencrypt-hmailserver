@@ -33,6 +33,8 @@ I am using Certify the Web because:
 
 Because Let's Encrypt certificates last only up to 90 days steps 1, 2 and 5 need to be repeated everytime the certificate needs to be replaced so it's best if its automated.  Steps 3 and 4 only apply the first time a certificate is applied.
 
+**Only one certificate is needed even if hMailServer hosts multiple domains.  It is the connection to the server that is being encrypted not emails destined for a specific domain.**
+
 ## Installing
 
 Certify the Web creates this folder:
@@ -44,6 +46,8 @@ which has one existing folder called 'pfx' into which it saves .pfx files contai
 In practice you can save the files anywhere but these instructions and the scripts assume this location.  If you choose to use an alternative location you will also need to change the path used in the PowerShell [after-generate.ps1](ps/after-generate.ps1) and PHP [extract-certificate.php](php/extract-certificate.php) scripts.
 
 You will also need to edit [after-generate.ps1](ps/after-generate.ps1) to modify the change the location of the PHP executable file.  I installed PHP using the Microsoft Web installer.  If you ave done the same then this file may be in the same location.
+
+## Post processing generated licenses
 
 Next tell Certify the Web how to find the PowerShell script to run once a certificate has been generated.  The screenshot shows the steps to do this:
 
@@ -60,4 +64,39 @@ If there is a .pfx file in the 'pfx' folder then after testing there should be t
 2. pkeypem
 3. output.txt
 
-The file output.txt will contain a review of the steps taken to process the .pfx file.  Any errors will be written to the error log device specified in the relevant php.imi file.
+The cert.pem and pkey.pem files will be regenerated everytime there is a new certificate .pfx file to process.  These are text files with a specific content layout.
+
+The output.txt file will contain a review of the steps taken to process the .pfx file.  Any errors will be written to the error log device specified in the relevant php.ini file.
+
+## Change hMail
+
+### Add an SSL certificate
+
+With cert.pem and pkey.pem available its time to let hMailServer know about them.  The following screenshot is of part of the hMail administrator's console and included so you can see where to reference these files:
+
+![Set a certificate in hMail administrator](http://lyquidity-downloads.s3.amazonaws.com/github-images/hmail-cert.png)
+
+A new certificate entry is added to 'settings->advanced->ssl certificates'.  The name is anything you want that makes sense to you.  The 'Certificate File' text box references the cert.pem file while the 'Private key file' box references the pkey.pem file.
+
+**Only one certificate is needed even if hMailServer hosts multiple domains.  It is the connection to the server that is being encrypted not emails destined for a specific domain.**
+
+### Add new ports
+
+The standard ports used for email are normally:
+
++ SMTP - 25
++ POP3 - 110
++ IMAP - 143
+
+The ports usually used for encrypted connections are normally:
+
++ SMTP - 587
++ POP3 - 995
++ IMAP - 993
+
+**Connections on these ports will need to be allowed through the firewall if not already permitted.**
+
+The next screenshot shows the settings for SMTPS.  The port to be used is defined, the port is set to use SSL/TLS and the certificate defined in the previous step is selected.  The same settings are applied to the other mail transfer types being used (with each having its appropriate port number).
+
+![Setting properties for SMTPS](http://lyquidity-downloads.s3.amazonaws.com/github-images/hmail-smtps.png)
+
