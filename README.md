@@ -100,3 +100,11 @@ The next screenshot shows the settings for SMTPS.  The port to be used is define
 
 ![Setting properties for SMTPS](http://lyquidity-downloads.s3.amazonaws.com/github-images/hmail-smtps.png)
 
+## Testing, testing, testing
+
+Assuming everything has been done correctly and the SSL ports allow traffic, its time to test.  A great site for sending test emails is the [Online SMTP tool](smtper.net).
+
+On this site enter your mail server address (should match the address in your certificate), check the 'Use Secured Connection' box and enter a from and to email address.  After solving the simple problem, press the 'Send the test' button.
+
+Do not use email addresses from your domain(s) as the from address.  Often these need to be authenticated and authentication is not needed to complete the test. Instead, make up an address like 'me@mydomain.org' or use a gmail, yahoo or other generic address.
+
