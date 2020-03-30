@@ -39,6 +39,12 @@ Certify the Web creates this folder:
 
 C:\ProgramData\Certify\certes\assets\
 
-which has one existing folder called 'pfx' into which it saves .pfx files containing the generated certificate and private key.  Save the folders and files in this repository to corresponding folders and files under the existing 'assets' folder.  In practice you can save the files anywhere but these instructions and the scripts assume this location.  If you choose to use an alternative location you will also need to change the path used in the PowerShell [after-generate.ps1](ps/after-generate.ps1) and PHP [extract-certificate.php](php/extract-certificate.php) scripts.
+which has one existing folder called 'pfx' into which it saves .pfx files containing the generated certificate and private key.  Save the folders and files in this repository to corresponding folders and files under the existing 'assets' folder.  
+
+In practice you can save the files anywhere but these instructions and the scripts assume this location.  If you choose to use an alternative location you will also need to change the path used in the PowerShell [after-generate.ps1](ps/after-generate.ps1) and PHP [extract-certificate.php](php/extract-certificate.php) scripts.
+
+You will also need to edit [after-generate.ps1](ps/after-generate.ps1) to modify the change the location of the PHP executable file.  I installed PHP using the Microsoft Web installer.  If you ave done the same then this file may be in the same location.
+
+Next tell Certify the Web how to find the PowerShell script to run once a certificate has been generated.  The screenshot shows the steps to do this:
 
 
