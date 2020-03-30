@@ -33,3 +33,12 @@ I am using Certify the Web because:
 
 Because Let's Encrypt certificates last only up to 90 days steps 1, 2 and 5 need to be repeated everytime the certificate needs to be replaced so it's best if its automated.  Steps 3 and 4 only apply the first time a certificate is applied.
 
+## Installing
+
+Certify the Web creates this folder:
+
+C:\ProgramData\Certify\certes\assets\
+
+which has one existing folder called 'pfx' into which it saves .pfx files containing the generated certificate and private key.  Save the folders and files in this repository to corresponding folders and files under the existing 'assets' folder.  In practice you can save the files anywhere but these instructions and the scripts assume this location.  If you choose to use an alternative location you will also need to change the path used in the PowerShell [after-generate.ps1](ps/after-generate.ps1) and PHP [extract-certificate.php](php/extract-certificate.php) scripts.
+
+
