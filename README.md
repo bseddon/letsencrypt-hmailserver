@@ -102,7 +102,7 @@ The next screenshot shows the settings for SMTPS.  The port to be used is define
 
 ## Testing, testing, testing
 
-Assuming everything has been done correctly and the SSL ports allow traffic, its time to test.  A great site for sending test emails is the [Online SMTP tool](smtper.net).
+Assuming everything has been done correctly and the SSL ports allow traffic, its time to test.  A great site for sending test emails is the [Online SMTP tool](https://smtper.net).
 
 On this site enter your mail server address (should match the address in your certificate), check the 'Use Secured Connection' box and enter a from and to email address.  After solving the simple problem, press the 'Send the test' button.
 
