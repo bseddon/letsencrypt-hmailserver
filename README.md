@@ -28,10 +28,11 @@ I am using Certify the Web because:
 1. Get a certificate PFX
 2. Extract the certificate and private key as PEM files
 3. Add the certificate and private key to hMailServer
+4. Download and install the Let's Encrypt intermediate certificate
 4. Add ports for secure access to SMTP, POP3 and IMAP services and apply the certificate to each service
 5. Restart the hMailServer service so it will load up the new certificate
 
-Because Let's Encrypt certificates last only up to 90 days steps 1, 2 and 5 need to be repeated everytime the certificate needs to be replaced so it's best if its automated.  Steps 3 and 4 only apply the first time a certificate is applied.
+Because Let's Encrypt certificates last only up to 90 days steps 1, 2 and 6 need to be repeated everytime the certificate needs to be replaced so it's best if its automated.  Steps 3, 4 and 5 only apply the first time a certificate is applied.
 
 **Only one certificate is needed even if hMailServer hosts multiple domains.  It is the connection to the server that is being encrypted not emails destined for a specific domain.**
 
@@ -46,6 +47,20 @@ which has one existing folder called 'pfx' into which it saves .pfx files contai
 In practice you can save the files anywhere but these instructions and the scripts assume this location.  If you choose to use an alternative location you will also need to change the path used in the PowerShell [after-generate.ps1](ps/after-generate.ps1) and PHP [extract-certificate.php](php/extract-certificate.php) scripts.
 
 You will also need to edit [after-generate.ps1](ps/after-generate.ps1) to modify the change the location of the PHP executable file.  I installed PHP using the Microsoft Web installer.  If you ave done the same then this file may be in the same location.
+
+## Let's Encrypt intermediate certificate
+
+My experience is that when connecting to my mail server from an Android device using SSL and when I believed the server to be successfully configured to use SSL the connection would still fail with the message:
+
+trust anchor for certification path not found
+
+It turns out the response from the server needs to include the Let's Encrypt intermediate certificate because Let's Encrypt is not yet a widely recognized root level certificate authority (CA).  As a result, when a client tries to verify the certificate provided by Let's Encrypt has been signed by a valid signer, the client cannot trace the certificate back to a known root CA.  By including an intermediate certificate, the client is able to discover the generated certificate is signed by Let's Encrypt whose own certificate is signed by a root CA. The Let's Encrypt certificate can be verified by either of two root CAs: Digital Signature Trust or ISRG
+
+The Digital Signature Trust root certificate appears in the 'Trusted Root Certificate Authorities' store in my Windows Server installation as 'DST Root CA X3'.  ISRG does not appear.
+
+ISRG is the root CA of Let's Encrypt.  You can find out more about the relationship between Let's Encrypt, DST and ISRG on [this page on the Let's Encrypt site](https://letsencrypt.org/2019/04/15/transitioning-to-isrg-root.html).
+
+
 
 ## Post processing generated licenses
 
