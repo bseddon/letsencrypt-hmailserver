@@ -48,20 +48,6 @@ In practice you can save the files anywhere but these instructions and the scrip
 
 You will also need to edit [after-generate.ps1](ps/after-generate.ps1) to modify the change the location of the PHP executable file.  I installed PHP using the Microsoft Web installer.  If you ave done the same then this file may be in the same location.
 
-## Let's Encrypt intermediate certificate
-
-My experience is that when connecting to my mail server from an Android device using SSL and when I believed the server to be successfully configured to use SSL the connection would still fail with the message:
-
-trust anchor for certification path not found
-
-It turns out the response from the server needs to include the Let's Encrypt intermediate certificate because Let's Encrypt is not yet a widely recognized root level certificate authority (CA).  As a result, when a client tries to verify the certificate provided by Let's Encrypt has been signed by a valid signer, the client cannot trace the certificate back to a known root CA.  By including an intermediate certificate, the client is able to discover the generated certificate is signed by Let's Encrypt whose own certificate is signed by a root CA. The Let's Encrypt certificate can be verified by either of two root CAs: Digital Signature Trust or ISRG
-
-The Digital Signature Trust root certificate appears in the 'Trusted Root Certificate Authorities' store in my Windows Server installation as 'DST Root CA X3'.  ISRG does not appear.
-
-ISRG is the root CA of Let's Encrypt.  You can find out more about the relationship between Let's Encrypt, DST and ISRG on [this page on the Let's Encrypt site](https://letsencrypt.org/2019/04/15/transitioning-to-isrg-root.html).
-
-
-
 ## Post processing generated licenses
 
 Next tell Certify the Web how to find the PowerShell script to run once a certificate has been generated.  The screenshot shows the steps to do this:
@@ -123,3 +109,26 @@ On this site enter your mail server address (should match the address in your ce
 
 Do not use email addresses from your domain(s) as the from address.  Often these need to be authenticated and authentication is not needed to complete the test. Instead, make up an address like 'me@mydomain.org' or use a gmail, yahoo or other generic address.
 
+## Let's Encrypt intermediate certificate
+
+OK, there is one more thing. My experience is that when connecting to my mail server from an Android device using SSL and when I believed the server to be successfully configured to use SSL the connection would still fail with the message:
+
+trust anchor for certification path not found
+
+If you are a 'just tell me' kind of person who doesn't care for the explanation [skip to the end of this post](#Solving the issue).
+
+It turns out the response from the server needs to include the Let's Encrypt intermediate certificate because Let's Encrypt is not yet a widely recognized root level certificate authority (CA).  As a result, when a client tries to verify the certificate provided by Let's Encrypt has been signed by a valid signer, the client cannot trace the certificate back to a known root CA.  By including an intermediate certificate, the client is able to discover the generated certificate is signed by Let's Encrypt whose own certificate is signed by a root CA. The Let's Encrypt certificate can be verified by either of two root CAs: Digital Signature Trust or ISRG
+
+ISRG is the root CA of Let's Encrypt.  You can find out more about the relationship between Let's Encrypt, DST and ISRG on [this page on the Let's Encrypt site](https://letsencrypt.org/2019/04/15/transitioning-to-isrg-root.html).
+
+The Digital Signature Trust root certificate appears in the 'Trusted Root Certificate Authorities' store in my Windows Server installation as 'DST Root CA X3'.  ISRG does not appear.  If I take the steps below to use the Let's Encrypt intermediary certificate that is signed by DST (see below) it solves the problem.  If I use the one signed by ISRG it does not.  My guess is that my aging Android device does not know about the ISRG root certificate (because the version of Android pre-dates Let's Encrypt) so ISRG declaring itself to be a valid root CA doesn't wash.
+
+## Solving the issue
+
+Visit the Let's Encrypt [Chain of Trust](https://letsencrypt.org/certificates/) page then scroll down to the link labelled [Let’s Encrypt Authority X3 (IdenTrust cross-signed)](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt) and click the link (or just click the previous link).
+
+Create a file in the folder that contains (or will contain) cert.pem called 'le-x3.pem then copy the certificate shown by the link and paste it into the file.
+
+If you have already created a cert.pem file by following the steps above, delete the cert.pem file, start the 'Certify the Web', click on your certificate, check the 'advanced options' check box, click on the 'scripting' option and then click on the 'test' button. This should regenerate your cert.pem file.  The difference is that the Let's Encrypt intermediate certificate has been appended.  Now when hmailServer responds to a client it will send your certificate *and* the intermediary certificate signed by the well-known DST root CA.
+
+If you know your clients will have the ISRG root CA certificate in their local certificate store you can download the other intermediate certificate '[Let’s Encrypt Authority X3 (Signed by ISRG Root X1)](https://letsencrypt.org/certs/letsencryptauthorityx3.pem.txt)' instead.  According to [this page on the Let's Encrypt site](https://letsencrypt.org/2019/04/15/transitioning-to-isrg-root.html) we're all going to have to do this by September 2021 anyway and the DST signed intermedate certificate will expire.
