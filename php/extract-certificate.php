@@ -46,27 +46,31 @@ $pfxFile = $mostRecentFilename;
 $data = file_get_contents( $pfxFile );
 if ( ! openssl_pkcs12_read($data, $certs, "") )
 {
-	error_log('Failed to read the PFX store');
+	echo("Failed to read the PFX store\n");
 	return;
 }
 if ( ! isset( $certs['cert'] ) )
 {
-	$message = 'Failed to access the certificate from the PFX store';
+	$message = "Failed to access the certificate from the PFX store\n";
 	echo( $message );
-	error_log( $message );
 	return;
 }
 
 if ( ! isset( $certs['pkey'] ) )
 {
-	$message = 'Failed to access the private key from the PFX store';
+	$message = "Failed to access the private key from the PFX store\n";
 	echo( $message );
-	error_log( $message );
 	return;
 }
 
 echo "Saving cert.pem\n";
-file_put_contents( "{$store}cert.pem", $certs['cert'] );
+$cert = $certs['cert'];
+if ( file_exists("{$store}le-x3.pem") )
+{
+	echo "  adding le-x3.pem\n";
+	$cert .= file_get_contents("{$store}le-x3.pem");
+}
+file_put_contents( "{$store}cert.pem", $cert );
 echo "Saving pkey.pem\n";
 file_put_contents( "{$store}pkey.pem", $certs['pkey'] );
 
