@@ -115,7 +115,7 @@ OK, there is one more thing. My experience is that when connecting to my mail se
 
 trust anchor for certification path not found
 
-If you are a 'just tell me' kind of person who doesn't care for the explanation [skip to the end of this post](#Solving the issue).
+If you are a 'just tell me' kind of person who doesn't care for the explanation [skip to the end of this post](#solving-the-issue).
 
 It turns out the response from the server needs to include the Let's Encrypt intermediate certificate because Let's Encrypt is not yet a widely recognized root level certificate authority (CA).  As a result, when a client tries to verify the certificate provided by Let's Encrypt has been signed by a valid signer, the client cannot trace the certificate back to a known root CA.  By including an intermediate certificate, the client is able to discover the generated certificate is signed by Let's Encrypt whose own certificate is signed by a root CA. The Let's Encrypt certificate can be verified by either of two root CAs: Digital Signature Trust or ISRG
 
