@@ -20,7 +20,7 @@ I am using Certify the Web because:
 
 1. Its a good tool
 2. It supports domain authorization so IIS does not have to be open to the public
-3. It will renew certificate automatically and
+3. It will renew certificates automatically and
 4. It can run a script after certificate generation so the certificate can be applied to hMailServer automatically and the server can be restarted
 
 ## Steps to be able to use a certificate with hMailServer
