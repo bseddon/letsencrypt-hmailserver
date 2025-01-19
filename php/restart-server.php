@@ -9,7 +9,7 @@
  */
 
 $hmail = new com("hMailServer.Application") or die("Unable to instantiate hMail");
-$hmail->Authenticate ("Administrator", "60803812aws");
+$hmail->Authenticate ("Administrator", "xxx");
 echo "authenticated\n";
 $hmail->stop();
 echo "stopped\n";
